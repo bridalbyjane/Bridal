@@ -7,6 +7,7 @@
 <meta name="description" content="Bespoke wedding dress alterations and bridal fitting consultations in Melbourne, VIC. Book an appointment with Jane Nguyen for expert, personalised gown alterations.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://bridalbyjane.github.io/Bridal/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 160'%3E%3Cpath d='M40 22 C 44 14, 56 14, 60 22 C 64 14, 76 14, 80 22 C 82 30, 78 40, 60 52 C 42 40, 38 30, 40 22 Z' fill='none' stroke='%23B3186F' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M46 50 L38 66 C 20 78, 14 110, 24 148 L96 148 C 106 110, 100 78, 82 66 L74 50' fill='none' stroke='%23B3186F' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M24 148 C 40 142, 50 154, 60 148 C 70 142, 80 154, 96 148' fill='none' stroke='%23B3186F' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jane Nguyen Bridal Alterations">
@@ -553,14 +554,6 @@
         <div id="booking-error">Booking requests aren't connected yet — please call <a href="tel:0423456818">0423 456 818</a> or try again shortly.</div>
 
         <form id="booking-form">
-          <div class="field-row">
-            <div class="field"><label for="f-name">Full Name</label><input id="f-name" name="name" type="text" required></div>
-            <div class="field"><label for="f-email">Email Address</label><input id="f-email" name="email" type="email" required></div>
-          </div>
-          <div class="field-row">
-            <div class="field"><label for="f-phone">Phone Number</label><input id="f-phone" name="phone" type="tel" required></div>
-            <div class="field"><label for="f-wedding-date">Wedding Date</label><input id="f-wedding-date" name="weddingDate" type="date"></div>
-          </div>
           <div class="field">
             <label for="f-appt-type">Appointment Type</label>
             <select id="f-appt-type" name="appointmentType" required>
@@ -575,6 +568,15 @@
             <label>Available Times</label>
             <div class="time-slots" id="time-slots"><p class="field-hint">Pick a date on the calendar and an appointment type above to see times.</p></div>
           </div>
+          <div class="field-row">
+            <div class="field"><label for="f-first-name">First Name</label><input id="f-first-name" name="firstName" type="text" required></div>
+            <div class="field"><label for="f-last-name">Surname</label><input id="f-last-name" name="lastName" type="text" required></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="f-email">Email Address</label><input id="f-email" name="email" type="email" required></div>
+            <div class="field"><label for="f-phone">Phone Number</label><input id="f-phone" name="phone" type="tel" required></div>
+          </div>
+          <div class="field"><label for="f-wedding-date">Wedding Date</label><input id="f-wedding-date" name="weddingDate" type="date"></div>
           <div class="field"><label for="f-source">Where did you purchase your gown?</label><input id="f-source" name="source" type="text"></div>
           <div class="field"><label for="f-alterations">What alterations do you think you may require?</label><textarea id="f-alterations" name="alterations"></textarea></div>
           <div class="field"><label for="f-concerns">Any specific concerns about the fit of your gown?</label><textarea id="f-concerns" name="concerns"></textarea></div>
@@ -779,7 +781,9 @@
     e.preventDefault();
     errorPanel.style.display = 'none';
 
-    var name = document.getElementById('f-name').value.trim();
+    var firstName = document.getElementById('f-first-name').value.trim();
+    var lastName = document.getElementById('f-last-name').value.trim();
+    var name = (firstName + ' ' + lastName).trim();
     var email = document.getElementById('f-email').value.trim();
     var phone = document.getElementById('f-phone').value.trim();
     var apptOpt = apptSelect.selectedOptions[0];
@@ -815,7 +819,7 @@
 
     function showConfirmation() {
       var prettyDate = new Date(selectedISO + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
-      document.getElementById('confirm-name').textContent = name || 'there';
+      document.getElementById('confirm-name').textContent = firstName || name || 'there';
       document.getElementById('confirm-date').textContent = appointmentType + ' on ' + prettyDate + ' at ' + formatTime(Number(selectedTime.slice(0,2)), Number(selectedTime.slice(3,5)));
       document.getElementById('confirm-contact').textContent = email || phone || 'you';
       form.style.display = 'none';
