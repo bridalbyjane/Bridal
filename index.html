@@ -168,11 +168,6 @@
   .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
   .hero-art { display: flex; align-items: center; justify-content: center; position: relative; }
   .hero-art svg { width: 100%; max-width: 320px; height: auto; }
-  .hero-watermark {
-    position: absolute; top: -60px; right: -140px; width: 640px; height: 640px;
-    opacity: 0.05; pointer-events: none;
-  }
-  @media (max-width: 860px) { .hero-watermark { display: none; } }
 
   /* ---------- INTRO ---------- */
   .intro { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -383,11 +378,6 @@
 </header>
 
 <section id="home" class="hero">
-  <svg class="hero-watermark" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--accent)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M40 22 C 44 14, 56 14, 60 22 C 64 14, 76 14, 80 22 C 82 30, 78 40, 60 52 C 42 40, 38 30, 40 22 Z"/>
-    <path d="M46 50 L38 66 C 20 78, 14 110, 24 148 L96 148 C 106 110, 100 78, 82 66 L74 50"/>
-    <path d="M24 148 C 40 142, 50 154, 60 148 C 70 142, 80 154, 96 148" stroke-width="1"/>
-  </svg>
   <div class="wrap hero-grid">
     <div>
       <span class="eyebrow">Bridal Alterations &amp; Fitting Advice</span>
