@@ -309,10 +309,15 @@
   .before-appt { border: 1px solid var(--line); background: var(--accent-soft); padding: 18px 20px; font-size: 13.5px; color: var(--ink-soft); }
   .before-appt strong { color: var(--ink); }
   #booking-error { display: none; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent-ink); padding: 12px 16px; font-size: 13.5px; }
-  #booking-confirm { display: none; border: 1px solid var(--line); background: var(--accent-soft); padding: 30px; }
-  #booking-confirm h3 { font-size: 20px; margin-bottom: 10px; }
-  #booking-confirm p { color: var(--ink-soft); font-size: 14.5px; }
-  #booking-confirm p + p { margin-top: 8px; }
+  #booking-popup-overlay { display: none; position: fixed; inset: 0; background: rgba(33,28,26,0.55); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+  #booking-popup-overlay.open { display: flex; }
+  #booking-popup { position: relative; background: var(--surface); max-width: 440px; width: 100%; padding: 44px 36px 36px; text-align: center; box-shadow: var(--shadow); }
+  #booking-popup .popup-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+  #booking-popup h3 { font-size: 22px; margin-bottom: 12px; }
+  #booking-popup p { color: var(--ink-soft); font-size: 14.5px; margin-bottom: 10px; }
+  #booking-popup .popup-note { font-size: 13px; color: var(--ink-faint); margin-bottom: 0; }
+  #popup-close { position: absolute; top: 12px; right: 14px; background: none; border: none; font-size: 22px; line-height: 1; color: var(--ink-faint); cursor: pointer; padding: 6px; }
+  #popup-ok { margin-top: 18px; width: 100%; }
 
   /* ---------- CONTACT ---------- */
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
@@ -540,10 +545,9 @@
         <div class="cal-legend">
           <span><i class="dot avail"></i>Available</span>
           <span><i class="dot today-dot"></i>Today</span>
-          <span><i class="dot closed-dot"></i>Closed</span>
         </div>
         <div class="selected-line" id="cal-selected-line">Select a date, then choose an appointment type and time in the form.</div>
-        <p class="cal-assumption">Shown as closed on Sundays, 9am–5pm otherwise — let us know if this should reflect your studio's real hours.</p>
+        <p class="cal-assumption">Weekdays available 7pm–9pm. Saturdays and Sundays available 8am–7pm, in 30-minute increments.</p>
       </div>
 
       <div>
@@ -558,7 +562,7 @@
             <label for="f-appt-type">Appointment Type</label>
             <select id="f-appt-type" name="appointmentType" required>
               <option value="" data-minutes="" disabled selected>Choose an appointment type</option>
-              <option value="Initial Bridal Consultation &amp; Fitting" data-minutes="60">Initial Bridal Consultation &amp; Fitting (60 min)</option>
+              <option value="Initial Bridal Consultation &amp; Fitting" data-minutes="90">Initial Bridal Consultation &amp; Fitting (1.5 hr)</option>
               <option value="Bridal Fitting" data-minutes="45">Bridal Fitting (45 min)</option>
               <option value="Final Fitting" data-minutes="30">Final Fitting (30 min)</option>
               <option value="Alteration Consultation" data-minutes="45">Alteration Consultation (45 min)</option>
@@ -585,12 +589,19 @@
           <div><button type="submit" class="btn btn-primary" id="booking-submit">Send Booking Request</button></div>
         </form>
 
-        <div id="booking-confirm">
-          <h3>Thank you, <span id="confirm-name">—</span>.</h3>
-          <p>Your request for <strong id="confirm-date">a fitting</strong> has been sent. This isn't confirmed yet — Jane reviews each request and will email <strong id="confirm-contact">—</strong> once your slot is secured.</p>
-          <p style="color:var(--ink-faint); font-size:13px;">Prefer to speak sooner? Call <a href="tel:0423456818">0423 456 818</a>.</p>
-        </div>
       </div>
+    </div>
+  </div>
+
+  <div id="booking-popup-overlay">
+    <div id="booking-popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+      <button type="button" id="popup-close" aria-label="Close">&times;</button>
+      <div class="popup-icon">&#10003;</div>
+      <h3 id="popup-title">Request Sent!</h3>
+      <p>Thank you, <strong id="confirm-name">—</strong>. Your request for <strong id="confirm-date">a fitting</strong> has been sent.</p>
+      <p>This isn't confirmed yet — Jane reviews each request personally and will email <strong id="confirm-contact">—</strong> once your appointment is secured.</p>
+      <p class="popup-note">Prefer to speak sooner? Call <a href="tel:0423456818">0423 456 818</a>.</p>
+      <button type="button" class="btn btn-primary" id="popup-ok">Got it</button>
     </div>
   </div>
 </section>
@@ -672,13 +683,11 @@
       cell.textContent = d;
       var cellDate = new Date(viewYear, viewMonth, d);
       var iso = toISO(viewYear, viewMonth, d);
-      var isSunday = cellDate.getDay() === 0;
       var isPast = cellDate < today;
       var isToday = cellDate.getTime() === today.getTime();
 
       if (isToday) cell.classList.add('today');
-      if (isSunday) { cell.classList.add('closed'); cell.disabled = true; }
-      else if (isPast) { cell.classList.add('past'); cell.disabled = true; }
+      if (isPast) { cell.classList.add('past'); cell.disabled = true; }
       if (iso === selectedISO) cell.classList.add('selected');
 
       (function (isoValue, dateObj) {
@@ -709,13 +718,22 @@
 
   renderCalendar();
 
-  // ---- Appointment type + time slots (business hours 9am–5pm, closed Sunday) ----
+  // ---- Appointment type + time slots ----
+  // Weekdays: unavailable 9am-7pm (Jane's other commitments), available
+  // 7pm-9pm. Saturday & Sunday: available all day, 8am-7pm. Slots always
+  // start on a 30-minute increment regardless of the appointment's own
+  // duration.
   var apptSelect = document.getElementById('f-appt-type');
   var timeSlotsEl = document.getElementById('time-slots');
   var selectedTimeField = document.getElementById('f-selected-time');
   var selectedTime = null;
-  var OPEN_MIN = 9 * 60;
-  var CLOSE_MIN = 17 * 60;
+  var SLOT_STEP_MIN = 30;
+
+  function getDayWindow(dateObj) {
+    var dow = dateObj.getDay(); // 0 = Sunday, 6 = Saturday
+    if (dow === 0 || dow === 6) return { open: 8 * 60, close: 19 * 60 };
+    return { open: 19 * 60, close: 21 * 60 };
+  }
 
   function formatTime(hh, mm) {
     var period = hh < 12 ? 'am' : 'pm';
@@ -742,8 +760,9 @@
     var now = new Date();
     var isToday = selectedISO === toISO(today.getFullYear(), today.getMonth(), today.getDate());
     var any = false;
+    var win = getDayWindow(new Date(selectedISO + 'T00:00:00'));
 
-    for (var m = OPEN_MIN; m + minutes <= CLOSE_MIN; m += minutes) {
+    for (var m = win.open; m + minutes <= win.close; m += SLOT_STEP_MIN) {
       var hh = Math.floor(m / 60), mm = m % 60;
       var slotDate = new Date(selectedISO + 'T' + pad(hh) + ':' + pad(mm) + ':00');
       if (isToday && slotDate <= now) continue;
@@ -773,9 +792,26 @@
 
   // ---- Booking form submit ----
   var form = document.getElementById('booking-form');
-  var confirmPanel = document.getElementById('booking-confirm');
+  var popupOverlay = document.getElementById('booking-popup-overlay');
   var errorPanel = document.getElementById('booking-error');
   var submitBtn = document.getElementById('booking-submit');
+
+  function closePopup() {
+    popupOverlay.classList.remove('open');
+    form.reset();
+    selectedISO = null;
+    selectedTime = null;
+    selectedTimeField.value = '';
+    selectedDateField.value = '';
+    selectedLine.innerHTML = 'Select a date, then choose an appointment type and time in the form.';
+    renderCalendar();
+    renderTimeSlots();
+  }
+  document.getElementById('popup-close').addEventListener('click', closePopup);
+  document.getElementById('popup-ok').addEventListener('click', closePopup);
+  popupOverlay.addEventListener('click', function (e) {
+    if (e.target === popupOverlay) closePopup();
+  });
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -822,9 +858,7 @@
       document.getElementById('confirm-name').textContent = firstName || name || 'there';
       document.getElementById('confirm-date').textContent = appointmentType + ' on ' + prettyDate + ' at ' + formatTime(Number(selectedTime.slice(0,2)), Number(selectedTime.slice(3,5)));
       document.getElementById('confirm-contact').textContent = email || phone || 'you';
-      form.style.display = 'none';
-      confirmPanel.style.display = 'block';
-      confirmPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      popupOverlay.classList.add('open');
     }
 
     if (!BOOKING_ENDPOINT || BOOKING_ENDPOINT.indexOf('PASTE_') === 0) {
