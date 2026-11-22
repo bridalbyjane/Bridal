@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Review &amp; sign | Bridal by Jane</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 160'%3E%3Cpath d='M40 22 C 44 14, 56 14, 60 22 C 64 14, 76 14, 80 22 C 82 30, 78 40, 60 52 C 42 40, 38 30, 40 22 Z' fill='none' stroke='%23B3186F' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M46 50 L38 66 C 20 78, 14 110, 24 148 L96 148 C 106 110, 100 78, 82 66 L74 50' fill='none' stroke='%23B3186F' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M24 148 C 40 142, 50 154, 60 148 C 70 142, 80 154, 96 148' fill='none' stroke='%23B3186F' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #FBF7F2; --surface: #FFFFFF; --surface-2: #FBF7F2; --ink: #241B19; --ink-soft: #6E5F59; --ink-faint: #A4938C;
+    --accent: #B3186F; --accent-soft: #F7E9F0; --line: #ECDFDA; --rule: #241B19; --err-bg: #FBEDEF; --err-ink: #8A2236;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1B1315; --surface: #241A1D; --surface-2: #2E2124; --ink: #F4EAE6; --ink-soft: #C7B5AF; --ink-faint: #8C7A75;
+      --accent: #EC6FAE; --accent-soft: #3A2230; --line: #3D2C2E; --rule: #F4EAE6; --err-bg: #3A1F26; --err-ink: #F6A6B8;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: Montserrat, Arial, sans-serif; font-size: 15px; -webkit-text-size-adjust: 100%; }
+  .card { max-width: 520px; margin: 0 auto; background: var(--surface); min-height: 100vh; padding: 22px 16px 32px; }
+  .head { text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 12px; margin-bottom: 16px; }
+  .head svg { stroke: var(--accent); }
+  .brand { font-family: "Playfair Display", Georgia, serif; font-size: 24px; font-weight: 600; margin-top: 4px; }
+  .kind { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-top: 4px; min-height: 1em; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .sub { color: var(--ink-soft); margin: 0 0 16px; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 4px; }
+  td { padding: 7px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.p { text-align: right; white-space: nowrap; }
+  td small { display: block; color: var(--ink-soft); font-size: 12.5px; margin-top: 2px; }
+  tr.t td { border-bottom: none; border-top: 2px solid var(--rule); font-weight: 700; }
+  .eq { background: var(--accent-soft); padding: 12px; margin: 10px 0; font-size: 14px; line-height: 1.7; }
+  .eq b { font-size: 16px; }
+  .terms { font-size: 13px; line-height: 1.5; background: var(--surface-2); padding: 12px; margin: 14px 0; }
+  .accept { font-weight: 700; margin: 16px 0 8px; }
+  /* The pad is always white so the saved signature looks the same on paper and in any email app. */
+  .pad { position: relative; border: 1px dashed var(--ink-faint); background: #ffffff; touch-action: none; border-radius: 2px; }
+  .pad canvas { display: block; width: 100%; height: auto; touch-action: none; }
+  .pad .line { position: absolute; left: 14px; right: 14px; bottom: 30px; border-bottom: 1px solid #ECDFDA; pointer-events: none; }
+  .pad .hint { position: absolute; left: 14px; bottom: 10px; font-size: 12px; color: #A4938C; pointer-events: none; }
+  .row { display: flex; justify-content: space-between; align-items: center; margin: 8px 0 16px; font-size: 13px; color: var(--ink-soft); }
+  .link { background: none; border: none; color: var(--accent); font: inherit; font-size: 14px; padding: 8px 0 8px 12px; cursor: pointer; }
+  .btn { width: 100%; background: #B3186F; color: #fff; border: none; padding: 16px; font: inherit; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; font-size: 13px; border-radius: 2px; cursor: pointer; }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .note { font-size: 12px; color: var(--ink-faint); margin-top: 12px; line-height: 1.45; }
+  .done { text-align: center; padding: 40px 10px; }
+  .tick { width: 56px; height: 56px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 28px; line-height: 56px; margin: 0 auto 14px; }
+  .err { color: var(--err-ink); background: var(--err-bg); padding: 10px; margin-top: 10px; font-size: 13px; }
+  .loading { text-align: center; color: var(--ink-soft); padding: 40px 0; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="head">
+    <svg viewBox="0 0 120 160" width="30" height="40" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M40 22 C 44 14, 56 14, 60 22 C 64 14, 76 14, 80 22 C 82 30, 78 40, 60 52 C 42 40, 38 30, 40 22 Z"/><path d="M46 50 L38 66 C 20 78, 14 110, 24 148 L96 148 C 106 110, 100 78, 82 66 L74 50"/><path d="M24 148 C 40 142, 50 154, 60 148 C 70 142, 80 154, 96 148" stroke-width="3.5"/></svg>
+    <div class="brand" id="brand">Bridal by Jane</div>
+    <div class="kind" id="kind"></div>
+  </div>
+
+  <div id="loading" class="loading">Loading your quote…</div>
+
+  <div id="message" class="done" hidden><div class="tick" id="message-icon">!</div><p id="message-text"></p></div>
+
+  <div id="form" hidden>
+    <div id="review"></div>
+    <p class="accept">I understand &amp; accept these terms.</p>
+    <div class="pad"><canvas id="pad" width="600" height="220" aria-label="Signature pad"></canvas><div class="line"></div><div class="hint" id="hint">Sign above the line with your finger</div></div>
+    <div class="row"><span id="code"></span><button type="button" class="link" id="clear">Clear</button></div>
+    <button type="button" class="btn" id="go" disabled>Sign</button>
+    <div id="err"></div>
+    <p class="note">When you sign, the date and time and the type of device you are using are recorded with your signature, together with a copy of this quote.</p>
+  </div>
+
+  <div id="ok" class="done" hidden><div class="tick">✓</div><h1 id="ok-title">Thank you</h1><p class="sub" id="ok-text"></p></div>
+</div>
+
+<script>
+(function () {
+  // The booking backend (Google Apps Script web app). Same one the booking form uses.
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyROouTP05oEVUqItcS5rbD9oEL7xa0ZoipNcY7ucwSfZS3KR97hSkuKmD9tV2MP1u_/exec';
+  var $ = function (id) { return document.getElementById(id); };
+  var q = new URLSearchParams(location.search);
+  var id = q.get('id') || '', w = q.get('w') || '', k = q.get('k') || '';
+  var data = null;
+
+  function message(text, done) {
+    $('loading').hidden = true; $('form').hidden = true;
+    $('message-icon').textContent = done ? '✓' : '!';
+    $('message-text').textContent = text;
+    $('message').hidden = false;
+  }
+
+  if (!id || !w || !k) { message('This signing link isn’t complete. Please open it again from your email, or ask Jane for a new one.'); return; }
+
+  fetch(ENDPOINT + '?action=signdata&id=' + encodeURIComponent(id) + '&w=' + encodeURIComponent(w) + '&k=' + encodeURIComponent(k))
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (res.businessName) $('brand').textContent = res.businessName;
+      if (res.label) $('kind').textContent = res.label;
+      if (!res.ok) { message(res.error || 'This signing link isn’t valid any more.', res.done); return; }
+      data = res;
+      document.title = 'Review & sign | ' + (res.businessName || 'Bridal by Jane');
+      $('review').innerHTML = res.html;       // built and escaped by the backend
+      $('code').textContent = 'Quote code ' + res.code;
+      $('loading').hidden = true;
+      $('form').hidden = false;
+    })
+    .catch(function () { message('We couldn’t load your quote. Please check your connection and reload this page.'); });
+
+  // Signature pad
+  var c = $('pad'), x = c.getContext('2d'), drawing = false, last = null, inked = false;
+  function pt(e) { var r = c.getBoundingClientRect(); return { x: (e.clientX - r.left) * (c.width / r.width), y: (e.clientY - r.top) * (c.height / r.height) }; }
+  c.addEventListener('pointerdown', function (e) {
+    e.preventDefault(); try { c.setPointerCapture(e.pointerId); } catch (er) {}
+    drawing = true; last = pt(e);
+    x.fillStyle = '#1a1a1a'; x.beginPath(); x.arc(last.x, last.y, 1.6, 0, 7); x.fill();
+  });
+  c.addEventListener('pointermove', function (e) {
+    if (!drawing) return; e.preventDefault();
+    var p = pt(e);
+    x.strokeStyle = '#1a1a1a'; x.lineWidth = 3; x.lineCap = 'round'; x.lineJoin = 'round';
+    x.beginPath(); x.moveTo(last.x, last.y); x.lineTo(p.x, p.y); x.stroke(); last = p;
+    if (!inked) { inked = true; $('hint').hidden = true; $('go').disabled = false; }
+  });
+  function end() { drawing = false; }
+  c.addEventListener('pointerup', end); c.addEventListener('pointercancel', end);
+  // Stop iOS from scrolling the page while signing.
+  c.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
+
+  // Saved on a solid white background so it shows in dark-mode email apps and on paper.
+  function flat() {
+    var o = document.createElement('canvas'); o.width = c.width; o.height = c.height;
+    var y = o.getContext('2d'); y.fillStyle = '#ffffff'; y.fillRect(0, 0, o.width, o.height); y.drawImage(c, 0, 0);
+    return o.toDataURL('image/png');
+  }
+  $('clear').onclick = function () { x.clearRect(0, 0, c.width, c.height); inked = false; $('hint').hidden = false; $('go').disabled = true; };
+
+  $('go').onclick = function () {
+    var b = this; b.disabled = true; b.textContent = 'Sending…'; $('err').innerHTML = '';
+    var d = {
+      ua: navigator.userAgent, platform: navigator.platform || '', language: navigator.language || '',
+      screen: screen.width + 'x' + screen.height, pixelRatio: window.devicePixelRatio || 1, touch: navigator.maxTouchPoints || 0,
+      timeZone: (Intl.DateTimeFormat().resolvedOptions().timeZone || ''), deviceTime: new Date().toString()
+    };
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'sign', id: id, w: w, k: k, signature: flat(), details: d, code: data.code })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok) throw new Error(res && res.error ? res.error : 'Your signature couldn’t be saved. Please try again.');
+        $('form').hidden = true;
+        $('ok-title').textContent = 'Thank you' + (data.first ? ', ' + data.first : '');
+        $('ok-text').textContent = 'Your signature has been received. ' +
+          (data.emailed ? 'A signed copy is on its way to your inbox. You can close this page.' : 'You can hand the phone back or close this page.');
+        $('ok').hidden = false;
+        window.scrollTo(0, 0);
+      })
+      .catch(function (er) {
+        b.disabled = false; b.textContent = 'Sign';
+        var m = er && er.message && !/Failed to fetch|NetworkError|Load failed/i.test(er.message) ? er.message : 'Your signature couldn’t be sent. Please check your connection and press Sign again.';
+        var div = document.createElement('div'); div.className = 'err'; div.textContent = m; $('err').appendChild(div);
+      });
+  };
+})();
+</script>
+</body>
+</html>
