@@ -306,6 +306,8 @@
   }
   .time-slot:hover { border-color: var(--accent); }
   .time-slot.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .time-slot.booked { color: var(--closed); background: var(--surface-2); text-decoration: line-through; cursor: not-allowed; pointer-events: none; }
+  .time-slot:disabled { opacity: 1; }
   .before-appt { border: 1px solid var(--line); background: var(--accent-soft); padding: 18px 20px; font-size: 13.5px; color: var(--ink-soft); }
   .before-appt strong { color: var(--ink); }
   #booking-error { display: none; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent-ink); padding: 12px 16px; font-size: 13.5px; }
@@ -741,12 +743,39 @@
     return h12 + (mm ? ':' + pad(mm) : '') + period;
   }
 
+  // ---- Availability (which slots are already Confirmed) ----
+  var availabilityCache = {}; // iso date -> Promise<[{start:'HH:MM', duration:minutes}]>
+  var renderToken = 0;
+
+  function fetchAvailability(iso) {
+    if (availabilityCache[iso]) return availabilityCache[iso];
+    if (!BOOKING_ENDPOINT || BOOKING_ENDPOINT.indexOf('PASTE_') === 0) {
+      availabilityCache[iso] = Promise.resolve([]);
+      return availabilityCache[iso];
+    }
+    availabilityCache[iso] = fetch(BOOKING_ENDPOINT + '?action=availability&date=' + encodeURIComponent(iso))
+      .then(function (r) { return r.json(); })
+      .then(function (res) { return (res && res.ok && res.booked) ? res.booked : []; })
+      .catch(function () { return []; });
+    return availabilityCache[iso];
+  }
+
+  function timeToMinutes(hhmm) {
+    var parts = String(hhmm).split(':');
+    return Number(parts[0]) * 60 + Number(parts[1]);
+  }
+
+  function rangesOverlap(aStart, aDur, bStart, bDur) {
+    return aStart < (bStart + bDur) && (aStart + aDur) > bStart;
+  }
+
   function renderTimeSlots() {
     var opt = apptSelect.selectedOptions[0];
     var minutes = opt ? Number(opt.getAttribute('data-minutes')) : 0;
     selectedTime = null;
     selectedTimeField.value = '';
     timeSlotsEl.innerHTML = '';
+    var myToken = ++renderToken;
 
     if (!selectedISO) {
       timeSlotsEl.innerHTML = '<p class="field-hint">Pick a date on the calendar and an appointment type above to see times.</p>';
@@ -761,30 +790,52 @@
     var isToday = selectedISO === toISO(today.getFullYear(), today.getMonth(), today.getDate());
     var any = false;
     var win = getDayWindow(new Date(selectedISO + 'T00:00:00'));
+    var slotButtons = []; // { startMin, btn }
 
     for (var m = win.open; m + minutes <= win.close; m += SLOT_STEP_MIN) {
       var hh = Math.floor(m / 60), mm = m % 60;
       var slotDate = new Date(selectedISO + 'T' + pad(hh) + ':' + pad(mm) + ':00');
       if (isToday && slotDate <= now) continue;
       any = true;
-      (function (hhv, mmv) {
+      (function (hhv, mmv, startMin) {
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'time-slot';
         btn.textContent = formatTime(hhv, mmv);
         btn.addEventListener('click', function () {
+          if (btn.classList.contains('booked')) return;
           selectedTime = pad(hhv) + ':' + pad(mmv);
           selectedTimeField.value = selectedTime;
           Array.prototype.forEach.call(timeSlotsEl.querySelectorAll('.time-slot'), function (el) { el.classList.remove('selected'); });
           btn.classList.add('selected');
         });
         timeSlotsEl.appendChild(btn);
-      })(hh, mm);
+        slotButtons.push({ startMin: startMin, btn: btn });
+      })(hh, mm, m);
     }
 
     if (!any) {
       timeSlotsEl.innerHTML = '<p class="field-hint">No remaining times on this date — please choose another date.</p>';
+      return;
     }
+
+    fetchAvailability(selectedISO).then(function (booked) {
+      if (myToken !== renderToken || !booked.length) return; // a newer render superseded this one
+      slotButtons.forEach(function (entry) {
+        var taken = booked.some(function (b) {
+          return rangesOverlap(entry.startMin, minutes, timeToMinutes(b.start), b.duration);
+        });
+        if (taken) {
+          entry.btn.classList.add('booked');
+          entry.btn.disabled = true;
+          if (entry.btn.classList.contains('selected')) {
+            entry.btn.classList.remove('selected');
+            selectedTime = null;
+            selectedTimeField.value = '';
+          }
+        }
+      });
+    });
   }
 
   apptSelect.addEventListener('change', renderTimeSlots);
