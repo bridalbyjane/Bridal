@@ -328,11 +328,11 @@
   #popup-close, .popup-x { position: absolute; top: 12px; right: 14px; background: none; border: none; font-size: 22px; line-height: 1; color: var(--ink-faint); cursor: pointer; padding: 6px; }
   #incomplete-list { text-align: left; margin: 6px 0 22px; padding-left: 20px; color: var(--ink); font-size: 14.5px; line-height: 1.75; }
   #incomplete-list span { color: var(--ink-soft); }
-  #incomplete-ok { width: 100%; }
+  #incomplete-ok { width: 100%; justify-content: center; }
   .btn.is-disabled, .btn.is-disabled:hover { opacity: 0.45; cursor: not-allowed; background: var(--accent); color: #fff; }
   .is-missing { outline: 2px solid #B3261E; outline-offset: 3px; }
   select.is-missing { outline-offset: 1px; border-color: #B3261E; }
-  #popup-ok { margin-top: 18px; width: 100%; }
+  #popup-ok { margin-top: 18px; width: 100%; justify-content: center; }
 
   /* ---------- CONTACT ---------- */
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
@@ -890,7 +890,7 @@
     renderTimeSlots();
   }
   document.getElementById('popup-close').addEventListener('click', closePopup);
-  document.getElementById('popup-ok').addEventListener('click', closePopup);
+  document.getElementById('popup-ok').addEventListener('click', function () { window.location.href = 'thank-you.html'; });
   popupOverlay.addEventListener('click', function (e) {
     if (e.target === popupOverlay) closePopup();
   });
@@ -1012,6 +1012,14 @@
       document.getElementById('confirm-name').textContent = firstName || name || 'there';
       document.getElementById('confirm-date').textContent = appointmentType + ' on ' + prettyDate + ' at ' + formatTime(Number(selectedTime.slice(0,2)), Number(selectedTime.slice(3,5)));
       document.getElementById('confirm-contact').textContent = email || phone || 'you';
+      // Details for the Thank You page. Kept in this browser tab only (never in the web address).
+      try {
+        sessionStorage.setItem('bbjThanks', JSON.stringify({
+          firstName: firstName,
+          appointment: document.getElementById('confirm-date').textContent,
+          contact: email || phone
+        }));
+      } catch (err) {}
       popupOverlay.classList.add('open');
     }
 
